@@ -9,13 +9,16 @@ const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const API_KEY=import.meta.env.VITE_TMDB_API_KEY;
 
-const API_OPTIONS={
-  method:'GET',
-  headers :{
-   accept:'application/json',
-   Authorization : `Bearer ${API_KEY}`
-  }
-}
+const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
+
+const API_OPTIONS = {
+  method: 'GET',
+  headers: {
+    accept: 'application/json',
+    Authorization: `Bearer ${API_ACCESS_TOKEN}`, 
+  },
+};
+
 
 const App= () => {
   const [debouncedSearchTerm,setDebouncedSearchTerm] = useState('');
@@ -50,9 +53,14 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
     }
     setMoviesList(data.results);
      
-    if(query && data.results.length>0){
-      await updateSearchCount(query,data.results[0]);
-    }
+    if (query && data.results.length > 0) {
+  try {
+    await updateSearchCount(query, data.results[0]);
+  } catch (err) {
+    console.error("updateSearchCount failed:", err);
+
+  }
+}
 
     }catch(error){
       console.error(`Error Fething Movies:`,error);
@@ -67,7 +75,7 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
       setTrendingMovies(movies);
     } catch (error) {
 
-      console.error(`Error Fething Movies:`,error);
+      console.error(`Error Fetching Movies:`,error);
       
       
     }
@@ -76,7 +84,7 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
 
 useEffect(()=>{
       fetchMovies(debouncedSearchTerm);
-      loadTrendingMovies();
+      
 },[debouncedSearchTerm])
 useEffect(()=>{
   loadTrendingMovies();
@@ -89,7 +97,7 @@ useEffect(()=>{
     <div className='wrapper'>
 
       <header>
-        <img src="./hero-img.svg" alt="Hero Banner" />
+        <img src="./public/hero-img.svg" alt="Hero Banner" />
         <h1>You Will Find <span className='text-gradient'>Movies</span> That You Will Enjoy </h1>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
       
@@ -100,7 +108,7 @@ useEffect(()=>{
          <h2>TrendingMovies</h2> 
          <ul>
           {trendingMovies.map((movie, index) => (
-            <li key={movie.$id}>
+            <li key={index}>
               <p>{index+1}</p>
               <img src={movie.poster_url} alt={movie.title} />
             </li>
