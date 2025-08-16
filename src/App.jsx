@@ -16,7 +16,14 @@ const API_OPTIONS = {
     Authorization: `Bearer ${API_KEY}`, 
   },
 };
+const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
+const buildPosterUrl = (movie, size = 'w500') => {
+  if (movie?.poster_url) return movie.poster_url;
+
+  const path = movie?.poster_path;
+  return path ? `${TMDB_IMAGE_BASE}${size}${path}` : '/placeholder-poster.svg';
+};
 
 const App= () => {
   const [debouncedSearchTerm,setDebouncedSearchTerm] = useState('');
@@ -44,11 +51,20 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
     }
     const data=await response.json();
 
-    if(!data.results || data.results.length===0){
-      setErrorMessage('No movie found');
-      setMoviesList([]);
-      return;
-    }
+    if (!data || !Array.isArray(data.results)) {
+  
+  setErrorMessage('Unexpected response from server. Please try again later.');
+  setMoviesList([]);
+  return;
+}
+
+if (data.results.length === 0) {
+  
+  setErrorMessage('No movies found for your search.');
+  setMoviesList([]);
+  return;
+}
+
     setMoviesList(data.results);
      
     if (query && data.results.length > 0) {
@@ -82,7 +98,6 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
 
 useEffect(()=>{
       fetchMovies(debouncedSearchTerm);
-      loadTrendingMovies();
 },[debouncedSearchTerm])
 useEffect(()=>{
   loadTrendingMovies();
@@ -106,31 +121,34 @@ useEffect(()=>{
          <h2>TrendingMovies</h2> 
          <ul>
           {trendingMovies.map((movie, index) => (
-            <li key={index}>
+            <li key={movie.id}>
               <p>{index+1}</p>
-              <img src={movie.poster_url} alt={movie.title} />
+              <img src={buildPosterUrl(movie)} alt={movie.title || movie.name || 'Movie poster'} loading="lazy"/>
             </li>
           ))}
          </ul>
         </section>
       )}
       <section className='all-movies'>
-        
-        <h2>All Movies</h2>
-        
-        {isLoading ?(
-          <Spinner/>
-        ) :errorMessage ?(
-          <p className='text-red-500'>{errorMessage}</p>
-        ) : (
-          <ul>
-            { moviesList.map((movie)=>(
-               <MovieCard key={movie.id} movie={movie}/>
-            ))}
-          </ul>
-        ) }
-      
-      </section>
+  <h2>All Movies</h2>
+
+  {isLoading && (
+    <Spinner />
+  )}
+
+  {!isLoading && errorMessage && (
+    <p className='text-red-500'>{errorMessage}</p>
+  )}
+
+  {!isLoading && !errorMessage && (
+    <ul>
+      {moviesList.map((movie) => (
+        <MovieCard key={movie.id} movie={movie} />
+      ))}
+    </ul>
+  )}
+</section>
+
       
     </div>
   </div>
