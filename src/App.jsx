@@ -84,7 +84,7 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
 
 useEffect(()=>{
       fetchMovies(debouncedSearchTerm);
-      
+      loadTrendingMovies();
 },[debouncedSearchTerm])
 useEffect(()=>{
   loadTrendingMovies();
