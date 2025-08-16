@@ -20,7 +20,8 @@ export const updateSearchCount = async (searchTerm, movie) => {
 
       const doc = result.documents[0];
       await database.updateDocument(DATABASE_ID, COLLECTION_ID, doc.$id,
-        { count: (parseInt(doc.count) || 0) + 1 }
+        { count: (doc.count ?? 0) + 1 }
+
       );
     
    } else {
@@ -32,7 +33,10 @@ export const updateSearchCount = async (searchTerm, movie) => {
           searchTerm,
           count: 1,
           movie_id: movie.id,
-          poster_url: `https://image.tmdb.org/t/p/w500${movie.poster_path}`,
+          poster_url: movie.poster_path 
+          ? `https://image.tmdb.org/t/p/w500${movie.poster_path}` 
+          : '/placeholder-poster.svg',
+
           title:movie.title,
         }
       );
