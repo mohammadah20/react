@@ -9,13 +9,11 @@ const API_BASE_URL = 'https://api.themoviedb.org/3';
 
 const API_KEY=import.meta.env.VITE_TMDB_API_KEY;
 
-const API_ACCESS_TOKEN = import.meta.env.VITE_TMDB_ACCESS_TOKEN;
-
 const API_OPTIONS = {
   method: 'GET',
   headers: {
     accept: 'application/json',
-    Authorization: `Bearer ${API_ACCESS_TOKEN}`, 
+    Authorization: `Bearer ${API_KEY}`, 
   },
 };
 
@@ -64,7 +62,7 @@ useDebounce( () =>setDebouncedSearchTerm(searchTerm),500 ,[searchTerm])
 
     }catch(error){
       console.error(`Error Fething Movies:`,error);
-      setErrorMessage('Error fething movies.Please try again later');
+      setErrorMessage('Error fetching movies.Please try again later');
     }finally{
       setIsLoading(false);
     }
@@ -97,7 +95,7 @@ useEffect(()=>{
     <div className='wrapper'>
 
       <header>
-        <img src="./public/hero-img.svg" alt="Hero Banner" />
+        <img src="./hero-img.svg" alt="Hero Banner" />
         <h1>You Will Find <span className='text-gradient'>Movies</span> That You Will Enjoy </h1>
       <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm}/>
       
