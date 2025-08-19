@@ -19,7 +19,7 @@ const API_OPTIONS = {
 const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
 const buildPosterUrl = (movie, size = 'w500') => {
-  const path = movie?.poster_path;
+  const path = movie?.poster_url;
   return path ? `${TMDB_IMAGE_BASE}${size}${path}` : '/placeholder-poster.svg';
 };
 const App = () => {
