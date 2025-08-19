@@ -3,7 +3,7 @@ import { useParams } from "react-router-dom";
 
 
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
-const API_BASE_URL= "https://api.themoviedb.org/3";
+const BASE_URL= "https://api.themoviedb.org/3";
 const IMAGE_BASE_URL = "https://image.tmdb.org/t/p/w500";
 
 
@@ -16,7 +16,7 @@ const MovieDetails = () => {
     const fetchMovie = async () => {
       
       try{
-      const res = await fetch(`${API_BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`);
+      const res = await fetch(`${BASE_URL}/movie/${id}?api_key=${API_KEY}&language=en-US`);
       const data = await res.json();
       setMovie(data);
      } catch (err) {
