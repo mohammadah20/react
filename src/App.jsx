@@ -118,7 +118,7 @@ if (data.results.length === 0) {
               {trendingMovies.map((movie, index) => (
                 <li key={movie.id}>
                   <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title || movie.searchTerm} loading='lazy'/>
+                  <img src={buildPosterUrl(movie)} alt={movie.title} loading='lazy'/>
                 </li>
               ))}
             </ul>
