@@ -1,7 +1,7 @@
 import Search from './components/Search.jsx'
 import { useEffect, useState } from 'react'
 import Spinner from './components/Spinner.jsx'
-import MovieCard from './components/MovieCard.js'
+import MovieCard from './components/MovieCard.jsx'
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './appwrite.js'
 
@@ -51,19 +51,29 @@ const App = () => {
 
       const data = await response.json();
 
-      if(data.Response === 'False') {
-        setErrorMessage(data.Error || 'Failed to fetch movies');
-        setMovieList([]);
-        return;
-      }
+      if (!data || !Array.isArray(data.results)) {
+  
+  setErrorMessage('Unexpected response from server. Please try again later.');
+  setMovieList([]);
+  return;
+}
 
-      setMovieList(data.results || []);
+if (data.results.length === 0) {
+  
+  setErrorMessage('No movies found for your search.');
+  setMovieList([]);
+  return;
+}
+
+    setMovieList(data.results);
+
+      
 
       if(query && data.results.length > 0) {
         await updateSearchCount(query, data.results[0]);
       }
     } catch (error) {
-      console.error(`Error fetching movies: ${error}`);
+      console.error(`Error fetching movies:`,error);
       setErrorMessage('Error fetching movies. Please try again later.');
     } finally {
       setIsLoading(false);
@@ -76,7 +86,7 @@ const App = () => {
 
       setTrendingMovies(movies);
     } catch (error) {
-      console.error(`Error fetching trending movies: ${error}`);
+      console.error(`Error fetching trending movies:`, error);
     }
   }
 
@@ -90,12 +100,12 @@ const App = () => {
 
   return (
     <main>
-      <div className="pattern"/>
+      <div className="pattern">
 
       <div className="wrapper">
         <header>
-          <img src="./hero.png" alt="Hero Banner" />
-          <h1>Find <span className="text-gradient">Movies</span> You'll Enjoy Without the Hassle</h1>
+          <img src="./hero-img.svg" alt="Hero Banner" />
+          <h1> You Will Find <span className="text-gradient">Movies</span> That You Will Enjoy </h1>
 
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
@@ -106,9 +116,9 @@ const App = () => {
 
             <ul>
               {trendingMovies.map((movie, index) => (
-                <li key={movie.$id}>
+                <li key={movie.id}>
                   <p>{index + 1}</p>
-                  <img src={movie.poster_url} alt={movie.title} />
+                  <img src={movie.poster_url} alt={movie.title || movie.searchTerm} loading='lazy'/>
                 </li>
               ))}
             </ul>
@@ -118,22 +128,28 @@ const App = () => {
         <section className="all-movies">
           <h2>All Movies</h2>
 
-          {isLoading ? (
-            <Spinner />
-          ) : errorMessage ? (
-            <p className="text-red-500">{errorMessage}</p>
-          ) : (
-            <ul>
-              {movieList.map((movie) => (
-                <MovieCard key={movie.id} movie={movie} />
-              ))}
-            </ul>
-          )}
-        </section>
+          {isLoading && (
+    <Spinner />
+  )}
 
+  {!isLoading && errorMessage && (
+    <p className='text-red-500'>{errorMessage}</p>
+  )}
+
+  {!isLoading && !errorMessage && (
+    <ul>
+      {movieList.map((movie) => (
+        <MovieCard key={movie.id} movie={movie} />
+      ))}
+    </ul>
+  )}
+ 
+          
+        </section>
+       </div>
       </div>
     </main>
   )
-}
+};
 
 export default App
