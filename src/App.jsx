@@ -1,5 +1,5 @@
+import Search from './components/search.jsx'
 import { useEffect, useState } from 'react'
-import Search from './components/Search.jsx'
 import Spinner from './components/Spinner.jsx'
 import MovieCard from './components/MovieCard.jsx'
 import { useDebounce } from 'react-use'
@@ -14,9 +14,14 @@ const API_OPTIONS = {
   headers: {
     accept: 'application/json',
     Authorization: `Bearer ${API_KEY}`
-  }
-}
+  },
+};
+const TMDB_IMAGE_BASE = 'https://image.tmdb.org/t/p/';
 
+const buildPosterUrl = (movie, size = 'w500') => {
+  const path = movie?.poster_path;
+  return path ? `${TMDB_IMAGE_BASE}${size}${path}` : '/placeholder-poster.svg';
+};
 const App = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
   const [searchTerm, setSearchTerm] = useState('');
@@ -34,11 +39,11 @@ const App = () => {
     setErrorMessage('');
 
     try {
-      const endpoint = query
+      const endPoint = query
         ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
         : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
-      const response = await fetch(endpoint, API_OPTIONS);
+      const response = await fetch(endPoint, API_OPTIONS);
 
       if(!response.ok) {
         throw new Error('Failed to fetch movies');
@@ -125,6 +130,7 @@ const App = () => {
             </ul>
           )}
         </section>
+        
       </div>
     </main>
   )
