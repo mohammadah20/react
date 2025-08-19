@@ -1,7 +1,7 @@
-import Search from './components/search.jsx'
+import Search from './component/search.jsx'
 import { useEffect, useState } from 'react'
-import Spinner from './components/Spinner.jsx'
-import MovieCard from './components/MovieCard.jsx'
+import Spinner from './component/Spinner.jsx'
+import MovieCard from './component/MovieCard.jsx'
 import { useDebounce } from 'react-use'
 import { getTrendingMovies, updateSearchCount } from './appwrite.js'
 
@@ -130,7 +130,7 @@ const App = () => {
             </ul>
           )}
         </section>
-        
+
       </div>
     </main>
   )
