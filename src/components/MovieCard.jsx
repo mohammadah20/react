@@ -1,32 +1,35 @@
-import React from "react";
-import { Link } from "react-router-dom";
+ import React from 'react'
 
+const MovieCard = ({ movie:
+  { title, vote_average, poster_path, release_date, original_language }
+}) => {
+  return (
+    <div className="movie-card">
+      <img
+        src={poster_path ?
+          `https://image.tmdb.org/t/p/w500/${poster_path}` : '/no-movie.png'}
+        alt={title}
+      />
 
-const TMDB_IMAGE_BASE = "https://image.tmdb.org/t/p/"
+      <div className="mt-4">
+        <h3>{title}</h3>
 
-const buildPosterUrl = (movie, size = "w500") => {
- if (movie?.poster_path) {
-    return `https://image.tmdb.org/t/p/${size}${movie.poster_path}`
-  }
-  
-  if (movie?.poster_url) {
-    return movie.poster_url
-  }
- 
-  return "/placeholder-poster.svg"
+        <div className="content">
+          <div className="rating">
+            <img src="star.svg" alt="Star Icon" />
+            <p>{vote_average ? vote_average.toFixed(1) : 'N/A'}</p>
+          </div>
+
+          <span>•</span>
+          <p className="lang">{original_language}</p>
+
+          <span>•</span>
+          <p className="year">
+            {release_date ? release_date.split('-')[0] : 'N/A'}
+          </p>
+        </div>
+      </div>
+    </div>
+  )
 }
-  const MovieCard = ({movie }) => {
-   const movieId=movie.id || movie.movie_id;
-    return(
-         <li>
-      <Link to={`/movie/${movie.id}`}>
-        <img src={buildPosterUrl(movie)} alt={movie.title} loading="lazy" />
-      </Link>
-      <h3>
-        <Link to={`/movie/${movie.id}`}>{movie.title}</Link>
-      </h3>
-    </li>
-        
-    )
-}
-export default MovieCard 
+export default MovieCard
