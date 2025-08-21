@@ -89,7 +89,7 @@ const App = () => {
         <header>
           <img src="./hero-img.svg" alt="Hero Banner" />
           <h1>You Will Find <span className="text-gradient">Movies</span> That You Will Enjoy </h1>
-e
+
           <Search searchTerm={searchTerm} setSearchTerm={setSearchTerm} />
         </header>
 
