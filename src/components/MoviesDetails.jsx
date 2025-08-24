@@ -60,17 +60,17 @@ const MoviesDetails = () => {
             {movie.title}
           </h1>
 
-          <p className="text-lg text-indigo-600">
-            <span className="font-bold text-indigo-800">Release Year:</span>{" "}
+          <p className="text-lg text-blue-300">
+            <span className="font-bold text-blue-400">Release Year :</span>{" "}
             {movie.release_date?.split("-")[0]}
           </p>
 
-          <p className="text-2xl font-bold text-emerald-500">
-            Rating: {movie.vote_average?.toFixed(1)} / 10
+          <p className="text-2xl font-bold text-yellow-600">
+            Rating : {movie.vote_average?.toFixed(1)} / 10
           </p>
 
           <p className="text-lg leading-relaxed text-gray-200">
-            <h1></h1>
+            <h1 className="text-2xl text-purple-400" style={{textAlign:"left"}}>The Story Of The Movie : </h1>
             {movie.overview}
           </p>
         </div>
