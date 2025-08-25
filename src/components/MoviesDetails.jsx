@@ -20,12 +20,12 @@ const MoviesDetails = () => {
   useEffect(() => {
     const fetchMoviesDetails = async () => {
       try {
-        // Fetch movie details
+       
         const res = await fetch(`${API_BASE_URL}/movie/${id}`, API_OPTIONS);
         const data = await res.json();
         setMovie(data);
 
-        // Fetch videos (trailers)
+        
         const videoRes = await fetch(`${API_BASE_URL}/movie/${id}/videos`, API_OPTIONS);
         const videoData = await videoRes.json();
 
@@ -47,16 +47,16 @@ const MoviesDetails = () => {
   return (
     <div className="movie-detail max-w-6xl mx-auto p-8">
       <div className="flex flex-col md:flex-row gap-10 items-start">
-        {/* Poster */}
+       
         <img
           className="w-full md:w-1/4 rounded-xl shadow-xl"
           src={`https://image.tmdb.org/t/p/w500${movie.poster_path}`}
           alt={movie.title}
         />
 
-        {/* Movie info */}
+        
         <div className="flex-1 space-y-6">
-          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-500 via-pink-500 to-pink-500 bg-clip-text text-transparent">
+          <h1 className="text-5xl font-extrabold bg-gradient-to-r from-indigo-500 via-pink-300 to-pink-500 bg-clip-text text-transparent">
             {movie.title}
           </h1>
 
@@ -65,7 +65,7 @@ const MoviesDetails = () => {
             {movie.release_date?.split("-")[0]}
           </p>
 
-          <p className="text-2xl font-bold text-yellow-600">
+          <p className="text-2xl font-bold text-pink-600 ">
             Rating : {movie.vote_average?.toFixed(1)} / 10
           </p>
 
@@ -76,7 +76,7 @@ const MoviesDetails = () => {
         </div>
       </div>
 
-      {/* Trailer */}
+      
       {trailer && (
         <div className="trailer mt-12">
           <h2 className="text-3xl font-semibold mb-6 text-blue-300">🎥 Trailer</h2>
