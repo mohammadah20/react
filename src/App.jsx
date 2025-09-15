@@ -10,39 +10,41 @@ const API_BASE_URL = 'https://api.themoviedb.org/3';
 const API_KEY = import.meta.env.VITE_TMDB_API_KEY;
 
 const API_OPTIONS = {
-  method: 'GET',
+  method: 'GET', 
   headers: {
     accept: 'application/json',
     Authorization: `Bearer ${API_KEY}`
   }
-}
+} 
 
 const App = () => {
   const [debouncedSearchTerm, setDebouncedSearchTerm] = useState('')
-  const [searchTerm, setSearchTerm] = useState('');
+  const [searchTerm, setSearchTerm] = useState(''); 
   const [movieList, setMovieList] = useState([]);
   const [errorMessage, setErrorMessage] = useState('');
   const [isLoading, setIsLoading] = useState(false);
   const [trendingMovies, setTrendingMovies] = useState([]);
+ 
+  console.log(debouncedSearchTerm)
 
   useDebounce(() => setDebouncedSearchTerm(searchTerm), 500, [searchTerm])
 
   const fetchMovies = async (query = '') => {
-    setIsLoading(true);
-    setErrorMessage('');
+    setIsLoading(true); 
+    setErrorMessage(''); 
 
     try {
-      const endpoint = query
+      const endpoint = query 
         ? `${API_BASE_URL}/search/movie?query=${encodeURIComponent(query)}`
         : `${API_BASE_URL}/discover/movie?sort_by=popularity.desc`;
 
       const response = await fetch(endpoint, API_OPTIONS);
 
       if(!response.ok) {
-        throw new Error('Failed to fetch movies');
+        throw new Error('Failed to fetch movies'); 
       }
 
-      const data = await response.json();
+      const data = await response.json(); 
 
       if(data.Response === 'False') {
         setErrorMessage(data.Error || 'Failed to fetch movies');
@@ -52,8 +54,8 @@ const App = () => {
 
       setMovieList(data.results || []);
 
-      if(query && data.results.length > 0) {
-        await updateSearchCount(query, data.results[0]);
+      if(query && data.results.length > 0){ 
+        await updateSearchCount(query, data.results[0]); //فقط وقتی کاربر واقعاً چیزی جست‌وجو کرده و نتیجه‌ای برگشته، دنبال ثبت آمار (updateSearchCount) بریم.
       }
     } catch (error) {
       console.error(`Error fetching movies: ${error}`);
@@ -65,7 +67,7 @@ const App = () => {
 
   const loadTrendingMovies = async () => {
     try {
-      const movies = await getTrendingMovies();
+      const movies = await getTrendingMovies(); //انتظار می‌رود یک پرامیس برگرداند (مثلاً یک fetch که آرایه‌ای از فیلم‌ها را بازمی‌گرداند).
 
       setTrendingMovies(movies);
     } catch (error) {
@@ -75,11 +77,11 @@ const App = () => {
 
   useEffect(() => {
     fetchMovies(debouncedSearchTerm);
-  }, [debouncedSearchTerm]);
+  }, [debouncedSearchTerm]); //هر زمان کاربر پس از مکث (debounce) متن را تمام کند، debouncedSearchTerm آپدیت شده و این useEffect فراخوانی می‌شود تا نتایج جدید را از API بگیرد.
 
   useEffect(() => {
-    loadTrendingMovies();
-  }, []);
+    loadTrendingMovies(); //هدف گرفتن لیست فیلم‌های ترند در شروع کار است و (تابعی که لیستِ ترند را از سرور می‌گیرد و در state (setTrendingMovies) می‌ریزد)
+  }, []);// []فقط یک بار بعد از mount  انجام میشه
 
   return (
     <main>
@@ -95,7 +97,7 @@ const App = () => {
 
         {trendingMovies.length > 0 && (
           <section className="trending">
-            <h2 className='text-purple-400'>Trending Movies</h2>
+            <h2 className='text-purple-400 text-bold'>Trending Movies</h2>
 
             <ul>
               {trendingMovies.map((movie, index) => (
